@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Add New Batch{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="title">Add New Batch</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="field">
+                <label class="label" for="batchId">Batch ID</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="text" id="batchId" name="batch_id" placeholder="Enter Batch ID" required>
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-barcode"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                        <i id="availabilityIcon" class="fas fa-info-circle"></i>
+                    </span>
+                </div>
+                <div class="level">
+                    <div class="level-left">
+                        <button class="button is-info mt-3" type="button" id="checkBatchIdBtn">Check Availability</button>
+                    </div>
+                    <div class="level-right">
+                        <span id="availabilityResult" class="mt-3 pl-4 has-text-weight-bold is-size-4"></span>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="farmName">Farm Name</label>
+                    <div class="control">
+                        <input class="input" type="text" id="farmName" name="farm_name" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="originCountry">Origin Location</label>
+                    <div class="control">
+                        <input class="input" type="text" id="originCountry" name="origin_country" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="harvestDate">Harvest Date</label>
+                    <div class="control">
+                        <input class="input" type="date" id="harvestDate" name="harvest_date" required>
+                    </div>
+                </div>
+                <div class="control">
+                    <button class="button is-primary" type="submit">Add Batch</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+<script>
+document.getElementById('checkBatchIdBtn').addEventListener('click', function() {
+    var batchId = document.getElementById('batchId').value;
+    var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+    var availabilityResult = document.getElementById('availabilityResult');
+
+    if (batchId === '') {
+        availabilityResult.textContent = 'Please enter a Batch ID';
+        availabilityResult.classList.remove('has-text-success', 'has-text-danger');
+        availabilityResult.classList.add('has-text-weight-bold');
+        return; // Exit the function if batchId is empty
+    }
+
+    fetch('/blockchain/check_batch_id/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({batch_id: batchId})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.available) {
+            availabilityResult.textContent = 'Available';
+            availabilityResult.classList.remove('has-text-danger');
+            availabilityResult.classList.add('has-text-success', 'has-text-weight-bold');
+        } else {
+            availabilityResult.textContent = 'Not available';
+            availabilityResult.classList.remove('has-text-success');
+            availabilityResult.classList.add('has-text-danger', 'has-text-weight-bold');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        availabilityResult.textContent = 'Error checking availability';
+        availabilityResult.classList.remove('has-text-success');
+        availabilityResult.classList.add('has-text-danger', 'has-text-weight-bold');
+    });
+});
+</script>
+
+{% endblock %}
