@@ -1,5 +1,5 @@
 # CoffeeChain: Blockchain Logistics Platform
-
+### ☕From bean to brew, trace every step with CoffeeChain. ###
 CoffeeChain is a blockchain-based supply chain management platform designed to enhance transparency and traceability within the coffee logistics process. It simulates a decentralized ledger system using Django and smart contract principles to track the journey of coffee from producer to consumer.
 
 ## Features
