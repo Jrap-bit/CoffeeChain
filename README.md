@@ -21,7 +21,7 @@ CoffeeChain is a blockchain-based supply chain management platform designed to e
 - Selenium (for automated testing)
 
 
-## 🧩 Project Structure
+## Project Structure
 ```
 /CoffeeChain/
 ├── blockchain/           # Blockchain logic and smart contract simulation
